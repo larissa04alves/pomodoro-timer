@@ -45,8 +45,9 @@ Item {
     return out
   }
 
-  // O host devolve barConfig uma escrita atrasado (ver CLAUDE.md): a entrada
-  // que acabamos de gravar vale até ele devolver exatamente ela.
+  // O host devolve barConfig uma escrita atrasado (ver
+  // docs/armadilhas-de-desenvolvimento.md): a entrada que acabamos de gravar
+  // vale até ele devolver exatamente ela.
   readonly property var hostEntry: mergedSettings(root.shell ? root.shell.barConfig : null)
   property var pendingEntry: null
   // Entrega atrasada de uma escrita nossa não é mudança externa.

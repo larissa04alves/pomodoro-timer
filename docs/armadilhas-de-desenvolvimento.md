@@ -1,5 +1,11 @@
-# CLAUDE.md — erros já cometidos aqui (não repetir)
+# Armadilhas de desenvolvimento: erros já cometidos aqui
 
+- **Nenhum arquivo de instrução de agente no repositório distribuído.**
+  `omarchy plugin add` clona o repo inteiro, e a revisão do marketplace
+  recusou o `CLAUDE.md` da raiz porque o Claude Code o carrega sozinho em
+  qualquer diretório abaixo dele (issue #8386). Este arquivo entra no agente
+  local por um `CLAUDE.local.md` com `@docs/armadilhas-de-desenvolvimento.md`,
+  listado em `.git/info/exclude`.
 - **`schemaVersion` é o número `1`, não a string `"1"`.** A string reprova nos
   dois validadores (o do host e o do `omarchy-plugin-validate`) e o plugin nem
   chega a instalar.

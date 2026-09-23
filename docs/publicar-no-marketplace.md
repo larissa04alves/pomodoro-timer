@@ -9,8 +9,15 @@ em 2026-09-15.
 
 - 2026-09-15: primeira submissão aberta pela larissa, issue
   [omacom/omarchy-plugin-marketplace#7069](https://github.com/omacom/omarchy-plugin-marketplace/issues/7069),
-  categoria Productivity, tags bar e quickshell. Aguarda os dois bots e o
-  `approved-and-verified` de um mantenedor.
+  categoria Productivity, tags bar e quickshell.
+- 2026-09-23: a #7069 fechou porque o `master` andou depois da validação.
+  Submissão nova em
+  [omacom/omarchy-plugin-marketplace#8386](https://github.com/omacom/omarchy-plugin-marketplace/issues/8386).
+  A revisão pediu tirar o `CLAUDE.md` da raiz, e o conteúdo foi para
+  `docs/armadilhas-de-desenvolvimento.md`.
+
+Um push no `master` depois da validação invalida a submissão. Depois de cada
+push, edite o corpo da issue com o SHA novo para rodar os bots de novo.
 
 Atualize esta lista a cada submissão, verificação ou promoção de commit.
 

@@ -36,7 +36,7 @@ id=$(jq -r '.id' "$here/manifest.json")
 dest="$HOME/.config/omarchy/plugins/$id"
 
 mkdir -p "$dest"
-rsync -a --delete --exclude '.git' --exclude 'test' --exclude 'scripts' --exclude '.verify' "$here/" "$dest/"
+rsync -a --delete --exclude '.git' --exclude 'test' --exclude 'scripts' --exclude '.verify' --exclude 'CLAUDE.local.md' "$here/" "$dest/"
 omarchy plugin validate "$dest"
 omarchy-shell -q shell rescanPlugins
 
