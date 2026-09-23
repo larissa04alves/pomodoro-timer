@@ -1,174 +1,175 @@
-# Omadoro, o pomodoro do Omarchy
+# Omadoro, the Omarchy pomodoro
 
-Timer pomodoro como plugin da omarchy-shell. Um anel de progresso com a
-contagem regressiva fica na barra. O clique abre um popup com duas abas,
-**Pomodoro** (anel, pausar, pular, reiniciar) e **Config** (durações e
-auto-início).
+Omadoro is a pomodoro timer plugin for omarchy-shell. A progress ring with the
+countdown sits in the bar. A click opens a popup with two tabs, **Pomodoro**
+(ring, pause, skip, restart) and **Config** (durations and auto-start). The
+interface labels are in Portuguese.
 
-Não há binário, não há daemon próprio e não há passo de build. O plugin roda
-dentro da shell que você já usa, com a lógica em um arquivo JavaScript e a
-view em QML.
+There is no binary, no daemon of its own and no build step. The plugin runs
+inside the shell you already use, with the logic in one JavaScript file and
+the view in QML.
 
-![Anel e contagem na barra do Omarchy, com o popup aberto na aba Pomodoro](docs/img/barra.png)
+![Ring and countdown in the Omarchy bar, with the popup open on the Pomodoro tab](docs/img/barra.png)
 
-| Aba Pomodoro | Aba Config |
+| Pomodoro tab | Config tab |
 | --- | --- |
-| ![Popup na aba Pomodoro: anel, 24:32, Foco e os botões reiniciar, pausar e pular](docs/img/popup-pomodoro.png) | ![Popup na aba Config: sliders de foco, pausa curta, pausa longa e ciclos, e o interruptor de auto-iniciar](docs/img/popup-config.png) |
+| ![Popup on the Pomodoro tab showing the ring, 24:32, the Foco phase and the restart, pause and skip buttons](docs/img/popup-pomodoro.png) | ![Popup on the Config tab showing the focus, short break, long break and cycles sliders and the auto-start switch](docs/img/popup-config.png) |
 
-## Instalar
+## Install
 
-Requer Omarchy 4 com a omarchy-shell como barra (testado em 4.0.3).
+Omadoro needs Omarchy 4 with omarchy-shell as the bar. It was tested on 4.0.3.
 
 ```bash
 omarchy plugin add https://github.com/larissa04alves/omadoro.git --enable
 ```
 
-O `--enable` pergunta em qual seção da barra colocar o widget. O padrão é
-`right`. Para mover depois:
+With `--enable`, the installer asks which bar section gets the widget. The
+default is `right`. To move it later:
 
 ```bash
 omarchy bar move larissa04alves.omadoro --section center
 ```
 
-## Usar
+## Use
 
-O anel esvazia conforme a fase passa. A cor de destaque do tema cheia é foco,
-a meia força é pausa, e o anel desbota quando o timer está parado. Trocar o
-tema do Omarchy troca a cor do timer junto.
+The ring empties as the phase runs. The full theme accent color means focus,
+half strength means a break, and the ring fades when the timer is stopped. A
+new Omarchy theme changes the timer color with it.
 
-| Gesto | O que faz |
+| Input | Action |
 | --- | --- |
-| Clique esquerdo na barra | Abre ou fecha o popup |
-| Clique direito na barra | Pausa ou retoma sem abrir o popup |
-| Clique do meio na barra | Reinicia a fase atual |
-| `Esc` no popup | Fecha o popup |
-| `Tab` no popup | Vai para o próximo painel da barra |
-| Setas no popup | Trocam de aba |
-| `Enter` ou `Espaço` no popup | Pausa ou retoma |
+| Left click on the bar | Opens or closes the popup |
+| Right click on the bar | Pauses or resumes without opening the popup |
+| Middle click on the bar | Restarts the current phase |
+| `Esc` in the popup | Closes the popup |
+| `Tab` in the popup | Moves to the next bar panel |
+| Arrow keys in the popup | Switch tabs |
+| `Enter` or `Space` in the popup | Pauses or resumes |
 
-## Configurar
+## Configure
 
-A aba **Config** do popup tem quatro sliders e um interruptor:
+The **Config** tab of the popup has four sliders and one switch:
 
-| Opção | Faixa |
-| --- | --- |
-| Foco | 5 a 60 minutos |
-| Pausa curta | 1 a 20 minutos |
-| Pausa longa | 10 a 45 minutos |
-| Ciclos até a pausa longa | 2 a 8 |
-| Auto-iniciar a próxima fase | ligado ou desligado |
+| Option | UI label | Range |
+| --- | --- | --- |
+| Focus | Tempo de foco | 5 to 60 minutes |
+| Short break | Pausa curta | 1 to 20 minutes |
+| Long break | Pausa longa | 10 to 45 minutes |
+| Cycles until the long break | Ciclos até a pausa longa | 2 to 8 |
+| Auto-start the next phase | Auto-iniciar a próxima fase | on or off |
 
-As opções são gravadas inline na entrada do plugin em
-`~/.config/omarchy/shell.json`, o mesmo arquivo que guarda o resto do layout
-da barra. A entrada é editável à mão, ou pela CLI da barra:
+The plugin stores these options inline in its entry in
+`~/.config/omarchy/shell.json`, the same file that holds the rest of the bar
+layout. You can edit the entry by hand or through the bar CLI:
 
 ```bash
 omarchy bar set larissa04alves.omadoro work 30
 ```
 
-Formato da entrada:
+The entry looks like this:
 
 ```jsonc
 { "id": "larissa04alves.omadoro", "work": 25, "short": 5, "long": 15,
   "longEvery": 4, "autoStartNext": false }
 ```
 
-A chave `sound` aceita o caminho de um arquivo de áudio. Vazia, o plugin toca
-`complete.oga` do freedesktop.
+The `sound` key takes the path to an audio file. When it is empty, the plugin
+plays the freedesktop `complete.oga`.
 
-O estado de execução não fica aí. Fase, relógio e ciclo ficam em
-`~/.local/state/larissa04alves.omadoro/state.json`, ou sob `$XDG_STATE_HOME` se a
-variável estiver definida.
+The runtime state lives elsewhere. Phase, clock and cycle go to
+`~/.local/state/larissa04alves.omadoro/state.json`, or under `$XDG_STATE_HOME`
+when that variable is set.
 
-## Atalhos
+## Shortcuts
 
-Os mesmos verbos que o popup usa estão no IPC da shell:
+The shell IPC exposes the same verbs the popup uses:
 
 ```bash
 omarchy-shell omadoro <open|close|toggle|toggleRunning|pause|start|skip|restart|reset|health>
 ```
 
-`open`, `close` e `toggle` mexem na janela. `toggleRunning` alterna entre
-contar e parar, `pause` só pausa, `start` só começa se estiver parado, `skip`
-pula a fase, `restart` devolve a fase ao tempo cheio, `reset` zera o ciclo.
-`health` imprime fase, se está rodando e quanto falta, em JSON.
+`open`, `close` and `toggle` control the window. `toggleRunning` switches
+between running and stopped, `pause` only pauses, and `start` only starts a
+stopped timer. `skip` jumps to the next phase, `restart` sets the phase back
+to its full length and `reset` clears the cycle. `health` prints the phase,
+whether it is running and the time left, as JSON.
 
-Para ligar um atalho, em `~/.config/hypr/bindings.conf`:
+To bind a key, add this to `~/.config/hypr/bindings.conf`:
 
 ```
 bind = SUPER, P, exec, omarchy-shell omadoro toggleRunning
 ```
 
-## Atualizar e remover
+## Update and remove
 
 ```bash
 omarchy plugin update larissa04alves.omadoro && omarchy restart shell
 ```
 
-O `restart` é obrigatório. O plugin declara `keepLoaded: true` para que o
-timer continue contando quando o widget é desmontado, e o efeito colateral é
-que o serviço antigo sobrevive ao reload. Sem reiniciar a shell, o código
-novo não entra.
+The `restart` is required. The plugin declares `keepLoaded: true` so the
+timer keeps counting when the widget unmounts, and as a side effect the old
+service survives the reload. The new code only runs after a shell restart.
 
 ```bash
 omarchy plugin remove larissa04alves.omadoro
 ```
 
-## Como funciona
+## How it works
 
-O plugin tem três peças. `Service.qml` é o único por shell: ele guarda o
-timer, escreve o arquivo de estado, dispara notificação e som e registra o
-alvo IPC. `BarWidget.qml` é um por monitor e desenha o anel, o MM:SS e o
-popup. `Model.js` é a lógica pura, sem Qt, e decide toda transição.
+The plugin has three parts. `Service.qml` runs once per shell. It owns the
+timer, writes the state file, sends the notification and sound, and registers
+the IPC target. `BarWidget.qml` runs once per monitor and draws the ring, the
+MM:SS countdown and the popup. `Model.js` holds the pure logic, with no Qt,
+and decides every transition.
 
-A fase guarda o instante em que termina, em epoch de milissegundos, e não um
-contador. "Quanto falta" é uma subtração. Daí vêm os comportamentos que
-importam:
+Each phase stores the moment it ends, as an epoch in milliseconds, instead of
+a counter. The time left is a subtraction. That choice gives these behaviors:
 
-- Suspender ou desligar a máquina por mais de 120 segundos rebobina a fase
-  para o tempo cheio, pausada, sem notificação. A fase não terminou, a
-  máquina saiu.
-- Reiniciar a shell retoma de onde estava. O estado vai a disco a cada 30
-  segundos e em toda ação do usuário.
-- Um foco pulado não conta para a pausa longa.
-- Mudar uma duração só afeta uma fase pausada que ainda está no tempo cheio.
-  Nos outros casos a mudança vale no próximo ciclo.
-- A notificação e o som só saem no fim natural de uma fase. A notificação
-  vem do `omarchy-notification-send` e o som de `pw-play`, `paplay`, `mpv` ou
-  `ffplay`, o que existir. Clicar na notificação inicia a próxima fase.
+- If the machine suspends or shuts down for more than 120 seconds, the phase
+  goes back to its full length, paused, with no notification. The phase did
+  not finish, the machine was away.
+- A shell restart resumes where the timer was. The plugin writes the state to
+  disk every 30 seconds and on every user action.
+- A skipped focus phase does not count toward the long break.
+- A duration change only affects a paused phase that is still at its full
+  length. Otherwise the change applies from the next cycle.
+- The notification and sound only fire when a phase ends on its own. The
+  notification comes from `omarchy-notification-send`, and the sound plays
+  through whichever of `pw-play`, `paplay`, `mpv` or `ffplay` is installed.
+  Clicking the notification starts the next phase.
 
-As cores vêm do tema do Omarchy. O plugin não tem paleta própria.
+The colors come from the Omarchy theme. The plugin has no palette of its own.
 
-## Desenvolvimento
+## Development
 
 ```bash
-node test/model.test.js   # 36 testes da lógica pura, sem Qt
-scripts/verify.sh         # validate, qmllint, testes e render do anel
-scripts/verify.sh --live  # o acima mais o smoke na shell rodando
-scripts/dev.sh --restart  # copia o checkout para o diretório do plugin
+node test/model.test.js   # 36 tests of the pure logic, no Qt
+scripts/verify.sh         # validate, qmllint, tests and ring render
+scripts/verify.sh --live  # all of the above plus a smoke test on the running shell
+scripts/dev.sh --restart  # copies the checkout into the plugin directory
 ```
 
-`scripts/dev.sh` faz `rsync` para `~/.config/omarchy/plugins` porque o
-validador recusa qualquer symlink dentro do diretório do plugin. Aceita
-`--enable` e `--restart`.
+`scripts/dev.sh` uses `rsync` into `~/.config/omarchy/plugins` because the
+validator rejects any symlink inside the plugin directory. It accepts
+`--enable` and `--restart`.
 
-Salvar `BarWidget.qml` ou `Panel.qml` recarrega o plugin em poucos
-milissegundos. `Service.qml` não recarrega: por causa do `keepLoaded`, é
-`omarchy restart shell` toda vez.
+Saving `BarWidget.qml` or `Panel.qml` reloads the plugin within a few
+milliseconds. `Service.qml` does not reload because of `keepLoaded`, so every
+change to it needs `omarchy restart shell`.
 
-O `qmllint` e o `qmltestrunner` ficam em `/usr/lib/qt6/bin`. Não há nenhum
-dos dois no PATH desta máquina.
+`qmllint` and `qmltestrunner` live in `/usr/lib/qt6/bin`. Neither is on the
+PATH of the development machine.
 
-## Smoke manual
+## Manual smoke test
 
-Depois de instalar, confira na tela:
+After installing, check on screen that:
 
-1. A barra mostra o anel e o tempo no formato MM:SS.
-2. O clique esquerdo abre o popup na aba Pomodoro.
-3. Arrastar um slider da aba Config não fecha o popup.
-4. Com o timer rodando, `omarchy restart shell` retoma a contagem de onde
-   estava, sem notificação espúria.
+1. The bar shows the ring and the time as MM:SS.
+2. A left click opens the popup on the Pomodoro tab.
+3. Dragging a slider on the Config tab does not close the popup.
+4. With the timer running, `omarchy restart shell` resumes the countdown where
+   it was, with no stray notification.
 
-## Licença
+## License
 
-MIT. Veja [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
